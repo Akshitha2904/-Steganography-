@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganography Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+        input, button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Steganography Web App</h2>
+
+    <h3>Encode Message in Image</h3>
+    <form action="/encode" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <input type="text" name="message" placeholder="Enter secret message" required>
+        <button type="submit">Encode & Download</button>
+    </form>
+
+    <h3>Decode Message from Image</h3>
+    <form id="decodeForm">
+        <input type="file" id="decodeImage" required>
+        <button type="submit">Decode</button>
+    </form>
+    <p id="decodedMessage"></p>
+
+    <script>
+        document.getElementById('decodeForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append("image", document.getElementById('decodeImage').files[0]);
+
+            let response = await fetch('/decode', {
+                method: "POST",
+                body: formData
+            });
+            let result = await response.json();
+            document.getElementById('decodedMessage').innerText = "Decoded Message: " + result.message;
+        });
+    </script>
+</body>
+</html>
